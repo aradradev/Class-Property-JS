@@ -1,3 +1,4 @@
+/*
 class Rectangle {
   constructor(width, height){
     this.width = width;
@@ -37,7 +38,7 @@ try{
   console.log('error')
 }
 
-/*
+
 class Book {
   #page = 1
   constructor(title, pages){
@@ -93,3 +94,85 @@ l.addBooks([
   new Book ('The Fellowship of the Ring', 3000)
 ])
 console.log(l.firstBooksByLetter('d')) */
+
+function wait (duration){
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(duration)
+    }, duration)
+  }) 
+}
+function waitFor (duration){
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(duration)
+    }, duration) 
+  })
+}
+wait(2000)
+  .then(() => {
+    console.log('done 2s')
+    return waitFor(1000)
+  
+  })
+  .then(() => {
+    console.log('done 1s')
+    return wait(2000)
+  })
+  .then(() => {
+    console.log('done 0s')
+    return waitFor(0)
+  })
+ .catch(err => {
+   console.log(err)
+ 
+ })
+const async = async function () {
+  const duration = await wait(2000)
+  console.log(`done ${duration}ms`)
+}
+async()
+Promise.allSettled([wait(1000), waitFor(2000)])
+  .then(console.log)
+  .catch(console.log)
+
+function addDate(date, days){
+  const newDate = new Date(date.getTime())
+  newDate.setDate(newDate.getDate() + days)
+  return newDate
+}
+
+const MONTHS = 'months'
+const YEARS = 'years'
+const DAYS = 'days'
+const MINUTES ='minutes'
+const MONTHS_PER_YEAR = 12
+const MONTHS_PER_DAY = 30
+const DAYS_PER_WEEK = 7
+
+function addInterval(date, interval){
+  const parts = [
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+    date.getMilliseconds()
+  ]
+  for (let [unit, value] of Object.entries(interval)){
+    parts[unit] = parts[unit] + value
+  }
+  
+  return new Date(...parts)
+}
+
+const today = new Date()
+const futur = addInterval(today, {
+  [MONTHS]: 2,
+  [DAYS]: 1,
+  [MINUTES]: 3
+
+})
+console.log(today)
+console.log(futur)
